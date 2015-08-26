@@ -1,0 +1,32 @@
+{
+  "name": "vitesse-jsonspec",
+  "version": "1.0.0",
+  "description": "JSONSpec validator library leveraging vitesse for high performance validation",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/christkv/vitesse-jsonspec.git"
+  },
+  "keywords": [
+    "jsonspec",
+    "json",
+    "validation",
+    "high",
+    "performance"
+  ],
+  "author": "Christian Amor Kvalheim",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/christkv/vitesse-jsonspec/issues"
+  },
+  "homepage": "https://github.com/christkv/vitesse-jsonspec",
+  "dependencies": {
+    "vitesse": "latest"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  }
+}
