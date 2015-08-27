@@ -17,7 +17,7 @@ describe('Draft4', function() {
       testFiles = testFiles.filter(function(x) { 
         // return x.indexOf('oneOf.json') != -1
         //   || x.indexOf('allOf.json') != -1;
-        return x.indexOf('additionalItems.json') != -1;
+        return x.indexOf('patternProperties.json') != -1;
       });
 
       // resolve all the files
