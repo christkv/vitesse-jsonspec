@@ -6,6 +6,7 @@ var assert = require("assert"),
 describe('Draft4', function() {
   describe('validation', function() {
     it('should correctly execute Draft4 tests', function(done) {
+      this.timeout(90000);
       var directory = f('%s/suite/tests/draft4', __dirname);
       // Read in all the test files
       var testFiles = fs.readdirSync(directory)
@@ -15,14 +16,24 @@ describe('Draft4', function() {
 
       // Filter out a single test file for now
       testFiles = testFiles.filter(function(x) { 
-        // return x.indexOf('oneOf.json') != -1
-        //   || x.indexOf('allOf.json') != -1;
-        return x.indexOf('patternProperties.json') != -1;
+        return !(x.indexOf('definitions.json') != -1
+          || x.indexOf('dependencies.json') != -1
+          || x.indexOf('enum.json') != -1
+          || x.indexOf('ref.json') != -1
+          || x.indexOf('refRemote.json') != -1
+          || x.indexOf('type.json') != -1
+          || x.indexOf('uniqueItems.json') != -1
+        );
+
+        // return x.indexOf('properties.json') != -1
       });
 
       // resolve all the files
       testFiles = testFiles.map(function(x) {
-        return JSON.parse(fs.readFileSync(f('%s/%s', directory, x)));
+        return {
+          file: f('%s/%s', directory, x), 
+          schemas: JSON.parse(fs.readFileSync(f('%s/%s', directory, x)))
+        };
       });
 
       // Total tests left
@@ -42,8 +53,10 @@ describe('Draft4', function() {
   });
 });
 
-var executeTestFile = function(schemas,  callback) {
+var executeTestFile = function(obj,  callback) {  
+  var schemas = obj.schemas;
   var left = schemas.length;
+  console.log(f("\nexecute file [%s]", obj.file));
 
   for(var i = 0; i < schemas.length; i++) {
     executeTest(schemas[i], function(err) {
@@ -76,7 +89,7 @@ var executeTest = function(obj, callback) {
     // console.log("####################################################### 1")
 
     // Compile schema
-    new JSONSchema().compile(schema, {debug:false}, function(err, validator) {
+    new JSONSchema().compile(schema, {debug:true}, function(err, validator) {
       // console.log("####################################################### 2")
       var results = validator.validate(data);
       // console.dir(results)
