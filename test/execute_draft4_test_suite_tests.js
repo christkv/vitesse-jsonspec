@@ -22,10 +22,9 @@ describe('Draft4', function() {
           || x.indexOf('ref.json') != -1
           || x.indexOf('refRemote.json') != -1
           || x.indexOf('type.json') != -1
-          || x.indexOf('uniqueItems.json') != -1
         );
 
-        // return x.indexOf('properties.json') != -1
+        return x.indexOf('uniqueItems.json') != -1
       });
 
       // resolve all the files
