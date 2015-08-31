@@ -18,13 +18,11 @@ describe('Draft4', function() {
       testFiles = testFiles.filter(function(x) { 
         return !(x.indexOf('definitions.json') != -1
           || x.indexOf('dependencies.json') != -1
-          || x.indexOf('enum.json') != -1
           || x.indexOf('ref.json') != -1
           || x.indexOf('refRemote.json') != -1
-          || x.indexOf('type.json') != -1
         );
 
-        return x.indexOf('uniqueItems.json') != -1
+        return x.indexOf('enum.json') != -1
       });
 
       // resolve all the files
@@ -85,13 +83,13 @@ var executeTest = function(obj, callback) {
     var valid = tests[i].valid;
 
     console.log(f('  - %s', description));
-    // console.log("####################################################### 1")
+    console.log("####################################################### 1")
 
     // Compile schema
     new JSONSchema().compile(schema, {debug:true}, function(err, validator) {
-      // console.log("####################################################### 2")
+      console.log("####################################################### 2")
       var results = validator.validate(data);
-      // console.dir(results)
+      console.dir(results)
       if(valid) {
         assert.equal(0, results.length);
       } else {
