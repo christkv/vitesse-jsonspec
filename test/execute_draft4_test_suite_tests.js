@@ -16,13 +16,14 @@ describe('Draft4', function() {
 
       // Filter out a single test file for now
       testFiles = testFiles.filter(function(x) { 
-        return !(x.indexOf('definitions.json') != -1
-          || x.indexOf('dependencies.json') != -1
-          || x.indexOf('ref.json') != -1
-          || x.indexOf('refRemote.json') != -1
-        );
+        // return !(x.indexOf('definitions.json') != -1
+        //   || x.indexOf('dependencies.json') != -1
+        //   || x.indexOf('refRemote.json') != -1
+        //   || x.indexOf('ref.json') != -1
+        // );
 
-        return x.indexOf('enum.json') != -1
+        // return x.indexOf('ref.json') != -1
+        return x.indexOf('not.json') != -1
       });
 
       // resolve all the files
@@ -85,8 +86,10 @@ var executeTest = function(obj, callback) {
     console.log(f('  - %s', description));
     console.log("####################################################### 1")
 
+    var opt = {debug:true};
+    // var opt = {debug:false};
     // Compile schema
-    new JSONSchema().compile(schema, {debug:true}, function(err, validator) {
+    new JSONSchema().compile(schema, opt, function(err, validator) {
       console.log("####################################################### 2")
       var results = validator.validate(data);
       console.dir(results)
