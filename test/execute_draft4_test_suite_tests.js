@@ -16,14 +16,14 @@ describe('Draft4', function() {
 
       // Filter out a single test file for now
       testFiles = testFiles.filter(function(x) { 
-        // return !(x.indexOf('definitions.json') != -1
-        //   || x.indexOf('dependencies.json') != -1
-        //   || x.indexOf('refRemote.json') != -1
-        //   || x.indexOf('ref.json') != -1
-        // );
+        return !(x.indexOf('definitions.json') != -1
+          || x.indexOf('dependencies.json') != -1
+          || x.indexOf('refRemote.json') != -1
+          || x.indexOf('ref.json') != -1
+        );
 
         // return x.indexOf('ref.json') != -1
-        return x.indexOf('anyOf.json') != -1
+        return x.indexOf('pattern.json') != -1
       });
 
       // resolve all the files
@@ -87,15 +87,15 @@ var executeTest = function(obj, callback) {
     var valid = tests[i].valid;
 
     console.log(f('  - %s', description));
-    console.log("####################################################### 1")
+    // console.log("####################################################### 1")
 
     var opt = {debug:true};
-    // var opt = {debug:false};
+    var opt = {debug:false};
     // Compile schema
     new JSONSchema().compile(schema, opt, function(err, validator) {
-      console.log("####################################################### 2")
+      // console.log("####################################################### 2")
       var results = validator.validate(data);
-      console.dir(results)
+      // console.dir(results)
       if(valid) {
         assert.equal(0, results.length);
       } else {
