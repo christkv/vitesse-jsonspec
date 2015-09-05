@@ -23,7 +23,7 @@ describe('Draft4', function() {
         // );
 
         // return x.indexOf('ref.json') != -1
-        return x.indexOf('not.json') != -1
+        return x.indexOf('anyOf.json') != -1
       });
 
       // resolve all the files
@@ -33,6 +33,9 @@ describe('Draft4', function() {
           schemas: JSON.parse(fs.readFileSync(f('%s/%s', directory, x)))
         };
       });
+
+      // No tests
+      if(testFiles.length == 0) return done();
 
       // Total tests left
       var left = testFiles.length;
