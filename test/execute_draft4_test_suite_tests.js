@@ -19,11 +19,10 @@ describe('Draft4', function() {
         return !(x.indexOf('definitions.json') != -1
           || x.indexOf('dependencies.json') != -1
           || x.indexOf('refRemote.json') != -1
-          || x.indexOf('ref.json') != -1
         );
 
         // return x.indexOf('ref.json') != -1
-        return x.indexOf('pattern.json') != -1
+        // return x.indexOf('ref.json') != -1
       });
 
       // resolve all the files
