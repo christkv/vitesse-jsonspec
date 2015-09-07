@@ -1,4 +1,5 @@
 var assert = require("assert"),
+  http = require('http'),
   JSONSchema = require('../lib/json_schema'),
   fs = require('fs'),
   f = require('util').format;
@@ -21,8 +22,10 @@ describe('Draft4', function() {
           || x.indexOf('refRemote.json') != -1
         );
 
-        // return x.indexOf('ref.json') != -1
-        // return x.indexOf('ref.json') != -1
+        return x.indexOf('ref.json') != -1
+        // return x.indexOf('refRemote.json') != -1
+        // return x.indexOf('draft4.json') != -1
+        // return x.indexOf('not.json') != -1
       });
 
       // resolve all the files
@@ -36,80 +39,109 @@ describe('Draft4', function() {
       // No tests
       if(testFiles.length == 0) return done();
 
-      // Total tests left
-      var left = testFiles.length;
+      // Start up http server
+      bootServer(1234, function() {   
+        // Execute the next testFile
+        var executeF = function(testFiles, callback) {
+          if(testFiles.length == 0) return callback();
+          var testFile = testFiles.shift();
+          // Execute the test file
+          executeTestFile(testFile, function(err) {
+            if(err) return callback(err);
+            executeF(testFiles, callback);
+          });
+        }
 
-      // Execute all the test files
-      for(var i = 0; i < testFiles.length; i++) {
-        executeTestFile(testFiles[i], function(err) {
-          left = left - 1;
-
-          if(left == 0) {
-            done();
-          }
-        });
-      }
+        executeF(testFiles, done);
+      })
     });
   });
 });
 
 var executeTestFile = function(obj,  callback) {  
-  var schemas = obj.schemas;
-  var left = schemas.length;
+  var schemas = obj.schemas.slice(0);
   console.log(f("\nexecute file [%s]", obj.file));
 
-  for(var i = 0; i < schemas.length; i++) {
-    executeTest(schemas[i], function(err) {
-      left = left - 1;
+  // Execute the next test
+  var execute = function(schemas, callback) {
+    if(schemas.length == 0) return callback();
+    var schema = schemas.shift();
 
-      if(left == 0) callback();
+    // Execute the test
+    executeTest(schema, function(err) {
+      if(err) return callback(err);
+      execute(schemas, callback);
     });
   }
+
+  // Execute the schema
+  execute(schemas, callback);
+}
+
+var bootServer = function(port, callback) {
+  var servings = {
+    '/subSchemas.json': fs.readFileSync(f('%s/suite/remotes/subSchemas.json', __dirname), 'utf8'),
+    '/integer.json': fs.readFileSync(f('%s/suite/remotes/integer.json', __dirname), 'utf8'),
+    '/folder/folderInteger.json': fs.readFileSync(f('%s/suite/remotes/folder/folderInteger.json', __dirname), 'utf8')
+  }
+
+  var server = http.createServer(function (req, res) {
+    if(!servings[req.url]) {
+      res.writeHead(404, {'Content-Type': 'text/plain'});
+      return res.end(f('failed to locate resource %s', req.url));
+    }
+
+    // Server the document
+    res.writeHead(200, {'Content-Type': 'text/json'});
+    res.end(servings[req.url]);
+  })
+
+  server.listen(port);
+
+  // Return
+  callback();
 }
 
 var executeTest = function(obj, callback) {
-  var left = obj.tests;
   // Unpack schema
   var schema = obj.schema;
   var description = obj.description;
+  console.log(f('  %s', description))
   var tests = obj.tests;
   // Print out the schema
   console.log(f('running test %s against schema [%s]', description, JSON.stringify(schema)));
+  // Execute the tests
+  var execute = function(tests, callback) {
+    if(tests.length == 0) return callback();
+    // Get the next test
+    var t = tests.shift();
+    // Unpack the tests
+    var description = t.description;
+    console.log(f('    - %s', description))
+    var data = t.data;
+    var valid = t.valid;
 
-  // Number of tests left
-  var left = tests.length;
-
-  // Run all the tests
-  for(var i = 0; i < tests.length; i++) {
-    var description = tests[i].description;
-    var data = tests[i].data;
-    var valid = tests[i].valid;
-
-    console.log(f('  - %s', description));
-    // console.log("####################################################### 1")
-
+    // Compiler options
     var opt = {debug:true};
     var opt = {debug:false};
+
     // Compile schema
     new JSONSchema().compile(schema, opt, function(err, validator) {
-      // console.log("####################################################### 2")
+      if(err) callback(err);
       var results = validator.validate(data);
-      // console.dir(results)
+      // Expected valid validation
       if(valid) {
+      // console.dir(results[0].rule)
         assert.equal(0, results.length);
       } else {
         assert.ok(results.length > 0);
       }
-      // console.log("data = " + JSON.stringify(data))
-      // console.log("valid = " + valid);
 
-      // console.dir(results)
-      // console.dir(validator)
-      left = left - 1;
-
-      if(left == 0) {
-        callback();
-      }
+      // Execute next test
+      execute(tests, callback);
     });
   }
+
+  // Start executing tests
+  execute(tests, callback);
 }
