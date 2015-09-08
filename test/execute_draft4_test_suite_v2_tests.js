@@ -1,60 +1,61 @@
 var assert = require("assert"),
   http = require('http'),
-  JSONSchema = require('../lib/json_schema'),
+  JSONSchema = require('../lib/json_schema_v2'),
   fs = require('fs'),
   f = require('util').format;
 
 describe('Draft4', function() {
   describe('validation', function() {
     it('should correctly execute Draft4 tests', function(done) {
-      // this.timeout(90000);
-      // var directory = f('%s/suite/tests/draft4', __dirname);
-      // // Read in all the test files
-      // var testFiles = fs.readdirSync(directory)
-      //   .filter(function(x) {
-      //     return x.indexOf('.json') != -1;
-      //   });
+      this.timeout(90000);
+      var directory = f('%s/suite/tests/draft4', __dirname);
+      // Read in all the test files
+      var testFiles = fs.readdirSync(directory)
+        .filter(function(x) {
+          return x.indexOf('.json') != -1;
+        });
 
-      // // Filter out a single test file for now
-      // testFiles = testFiles.filter(function(x) { 
-      //   // return !(x.indexOf('definitions.json') != -1
-      //   //   || x.indexOf('dependencies.json') != -1
-      //   //   || x.indexOf('refRemote.json') != -1
-      //   // );
+      // Filter out a single test file for now
+      testFiles = testFiles.filter(function(x) { 
+        // return !(x.indexOf('definitions.json') != -1
+        //   || x.indexOf('dependencies.json') != -1
+        //   || x.indexOf('refRemote.json') != -1
+        // );
 
-      //   // return x.indexOf('ref.json') != -1
-      //   // return x.indexOf('refRemote.json') != -1
-      //   // return x.indexOf('draft4.json') != -1
-      //   return x.indexOf('definitions.json') != -1
-      // });
+        // return x.indexOf('ref.json') != -1
+        // return x.indexOf('refRemote.json') != -1
+        // return x.indexOf('draft4.json') != -1
+        // return x.indexOf('maxProperties.json') != -1
+        // return x.indexOf('maxLength.json') != -1
+        return x.indexOf('items.json') != -1
+      });
 
-      // // resolve all the files
-      // testFiles = testFiles.map(function(x) {
-      //   return {
-      //     file: f('%s/%s', directory, x), 
-      //     schemas: JSON.parse(fs.readFileSync(f('%s/%s', directory, x)))
-      //   };
-      // });
+      // resolve all the files
+      testFiles = testFiles.map(function(x) {
+        return {
+          file: f('%s/%s', directory, x), 
+          schemas: JSON.parse(fs.readFileSync(f('%s/%s', directory, x)))
+        };
+      });
 
-      // // No tests
-      // if(testFiles.length == 0) return done();
+      // No tests
+      if(testFiles.length == 0) return done();
 
-      // // Start up http server
-      // bootServer(1234, function() {   
-      //   // Execute the next testFile
-      //   var executeF = function(testFiles, callback) {
-      //     if(testFiles.length == 0) return callback();
-      //     var testFile = testFiles.shift();
-      //     // Execute the test file
-      //     executeTestFile(testFile, function(err) {
-      //       if(err) return callback(err);
-      //       executeF(testFiles, callback);
-      //     });
-      //   }
+      // Start up http server
+      bootServer(1234, function() {   
+        // Execute the next testFile
+        var executeF = function(testFiles, callback) {
+          if(testFiles.length == 0) return callback();
+          var testFile = testFiles.shift();
+          // Execute the test file
+          executeTestFile(testFile, function(err) {
+            if(err) return callback(err);
+            executeF(testFiles, callback);
+          });
+        }
 
-      //   executeF(testFiles, done);
-      // })
-      done();
+        executeF(testFiles, done);
+      })
     });
   });
 });
@@ -130,6 +131,8 @@ var executeTest = function(obj, callback) {
     new JSONSchema().compile(schema, opt, function(err, validator) {
       if(err) callback(err);
       var results = validator.validate(data);
+      console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+      console.dir(results)
       // Expected valid validation
       if(valid) {
       // console.dir(results[0].rule)
