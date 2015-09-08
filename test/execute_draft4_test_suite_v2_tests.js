@@ -30,7 +30,7 @@ describe('Draft4', function() {
         // return x.indexOf('maxProperties.json') != -1
         // return x.indexOf('maxLength.json') != -1
         // return x.indexOf('items.json') != -1
-        return x.indexOf('patternProperties.json') != -1
+        return x.indexOf('not.json') != -1
       });
 
       // resolve all the files
@@ -127,8 +127,8 @@ var executeTest = function(obj, callback) {
     var valid = t.valid;
 
     // Compiler options
-    // var opt = {debug:true};
-    var opt = {debug:false};
+    var opt = {debug:true};
+    // var opt = {debug:false};
 
     // Compile schema
     new JSONSchema().compile(schema, opt, function(err, validator) {
