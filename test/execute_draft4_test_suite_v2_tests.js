@@ -20,6 +20,8 @@ describe('Draft4', function() {
         // return !(x.indexOf('definitions.json') != -1
         //   || x.indexOf('dependencies.json') != -1
         //   || x.indexOf('refRemote.json') != -1
+        //   || x.indexOf('draft4.json') != -1
+        //   || x.indexOf('ref.json') != -1
         // );
 
         // return x.indexOf('ref.json') != -1
@@ -27,7 +29,8 @@ describe('Draft4', function() {
         // return x.indexOf('draft4.json') != -1
         // return x.indexOf('maxProperties.json') != -1
         // return x.indexOf('maxLength.json') != -1
-        return x.indexOf('items.json') != -1
+        // return x.indexOf('items.json') != -1
+        return x.indexOf('patternProperties.json') != -1
       });
 
       // resolve all the files
@@ -124,7 +127,7 @@ var executeTest = function(obj, callback) {
     var valid = t.valid;
 
     // Compiler options
-    var opt = {debug:true};
+    // var opt = {debug:true};
     var opt = {debug:false};
 
     // Compile schema
