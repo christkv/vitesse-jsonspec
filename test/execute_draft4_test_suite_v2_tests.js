@@ -30,7 +30,7 @@ describe('Draft4', function() {
         // return x.indexOf('maxProperties.json') != -1
         // return x.indexOf('maxLength.json') != -1
         // return x.indexOf('items.json') != -1
-        return x.indexOf('uniqueItems.json') != -1
+        return x.indexOf('oneOf.json') != -1
       });
 
       // resolve all the files
