@@ -17,12 +17,11 @@ describe('Draft4', function() {
 
       // Filter out a single test file for now
       testFiles = testFiles.filter(function(x) { 
-        // return !(x.indexOf('definitions.json') != -1
-        //   || x.indexOf('dependencies.json') != -1
-        //   || x.indexOf('refRemote.json') != -1
-        //   || x.indexOf('draft4.json') != -1
-        //   || x.indexOf('ref.json') != -1
-        // );
+        return !(x.indexOf('definitions.json') != -1
+          || x.indexOf('dependencies.json') != -1
+          || x.indexOf('refRemote.json') != -1
+          || x.indexOf('ref.json') != -1
+        );
 
         // return x.indexOf('ref.json') != -1
         // return x.indexOf('refRemote.json') != -1
@@ -30,7 +29,7 @@ describe('Draft4', function() {
         // return x.indexOf('maxProperties.json') != -1
         // return x.indexOf('maxLength.json') != -1
         // return x.indexOf('items.json') != -1
-        return x.indexOf('allOf.json') != -1
+        return x.indexOf('draft4.json') != -1
       });
 
       // resolve all the files
@@ -128,14 +127,14 @@ var executeTest = function(obj, callback) {
 
     // Compiler options
     var opt = {debug:true};
-    // var opt = {debug:false};
+    var opt = {debug:false};
 
     // Compile schema
     new JSONSchema().compile(schema, opt, function(err, validator) {
       if(err) callback(err);
       var results = validator.validate(data);
-      console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-      console.dir(results)
+      // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+      // console.dir(results)
       // Expected valid validation
       if(valid) {
       // console.dir(results[0].rule)
