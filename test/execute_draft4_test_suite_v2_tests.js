@@ -17,19 +17,17 @@ describe('Draft4', function() {
 
       // Filter out a single test file for now
       testFiles = testFiles.filter(function(x) { 
-        return !(x.indexOf('definitions.json') != -1
-          || x.indexOf('dependencies.json') != -1
-          || x.indexOf('refRemote.json') != -1
-          || x.indexOf('ref.json') != -1
-        );
+          // return !(
+          //   x.indexOf('dependencies.json') != -1
+          // );
 
         // return x.indexOf('ref.json') != -1
         // return x.indexOf('refRemote.json') != -1
-        // return x.indexOf('draft4.json') != -1
+        return x.indexOf('dependencies.json') != -1
         // return x.indexOf('maxProperties.json') != -1
         // return x.indexOf('maxLength.json') != -1
-        // return x.indexOf('items.json') != -1
-        return x.indexOf('draft4.json') != -1
+        // return x.indexOf('refRemote.json') != -1
+        // return x.indexOf('dependencies.json') != -1
       });
 
       // resolve all the files
@@ -44,7 +42,8 @@ describe('Draft4', function() {
       if(testFiles.length == 0) return done();
 
       // Start up http server
-      bootServer(1234, function() {   
+      bootServer(1234, function() {  
+        console.log("-------------------------------------------- Execute") 
         // Execute the next testFile
         var executeF = function(testFiles, callback) {
           if(testFiles.length == 0) return callback();
@@ -90,6 +89,9 @@ var bootServer = function(port, callback) {
   }
 
   var server = http.createServer(function (req, res) {
+    // console.log("############################## REQUEST " + req.url)
+    // console.dir(servings[req.url])
+
     if(!servings[req.url]) {
       res.writeHead(404, {'Content-Type': 'text/plain'});
       return res.end(f('failed to locate resource %s', req.url));
