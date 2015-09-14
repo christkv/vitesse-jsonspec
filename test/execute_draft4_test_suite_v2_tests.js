@@ -15,20 +15,20 @@ describe('Draft4', function() {
           return x.indexOf('.json') != -1;
         });
 
-      // Filter out a single test file for now
-      testFiles = testFiles.filter(function(x) { 
-          // return !(
-          //   x.indexOf('dependencies.json') != -1
-          // );
+      // // Filter out a single test file for now
+      // testFiles = testFiles.filter(function(x) { 
+      //     // return !(
+      //     //   x.indexOf('dependencies.json') != -1
+      //     // );
 
-        // return x.indexOf('ref.json') != -1
-        // return x.indexOf('refRemote.json') != -1
-        return x.indexOf('dependencies.json') != -1
-        // return x.indexOf('maxProperties.json') != -1
-        // return x.indexOf('maxLength.json') != -1
-        // return x.indexOf('refRemote.json') != -1
-        // return x.indexOf('dependencies.json') != -1
-      });
+      //   // return x.indexOf('ref.json') != -1
+      //   // return x.indexOf('refRemote.json') != -1
+      //   return x.indexOf('dependencies.json') != -1
+      //   // return x.indexOf('maxProperties.json') != -1
+      //   // return x.indexOf('maxLength.json') != -1
+      //   // return x.indexOf('refRemote.json') != -1
+      //   // return x.indexOf('dependencies.json') != -1
+      // });
 
       // resolve all the files
       testFiles = testFiles.map(function(x) {
@@ -43,7 +43,7 @@ describe('Draft4', function() {
 
       // Start up http server
       bootServer(1234, function() {  
-        console.log("-------------------------------------------- Execute") 
+        // console.log("-------------------------------------------- Execute") 
         // Execute the next testFile
         var executeF = function(testFiles, callback) {
           if(testFiles.length == 0) return callback();
