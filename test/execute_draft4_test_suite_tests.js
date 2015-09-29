@@ -1,6 +1,7 @@
 var assert = require("assert"),
   http = require('http'),
   JSONSchema = require('../lib/json_schema'),
+  jsfmt = require('jsfmt'),
   fs = require('fs'),
   f = require('util').format;
 
@@ -130,18 +131,30 @@ var executeTest = function(obj, callback) {
     // Compiler options
     var opt = {debug:true};
     var opt = {debug:false};
+    // Add optimizer
+    opt.optimize = true;
 
     // Compile schema
     new JSONSchema().compile(schema, opt, function(err, validator) {
       if(err) callback(err);
       var results = validator.validate(data);
-      // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-      // console.dir(results)
       // Expected valid validation
       if(valid) {
-      // console.dir(results[0].rule)
         assert.equal(0, results.length);
       } else {
+        if(results == 0) {
+          console.log("-------------------------------------------------------- source");
+          var source = f('var validator = %s', validator.validate.toString());
+          // Format the final code
+          source = jsfmt.format(source);
+          source = source.replace(/\n\n/g, "\n");
+          console.log(source)
+          console.log("-------------------------------------------------------- schema");
+          console.dir(schema)
+          console.log("-------------------------------------------------------- data");
+          console.dir(data)
+        }
+
         assert.ok(results.length > 0);
       }
 
