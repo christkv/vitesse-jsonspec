@@ -9,33 +9,46 @@ describe('Draft4', function() {
   describe('validation', function() {
     it('should correctly execute Draft4 tests', function(done) {
       this.timeout(90000);
+
+      // Get the documents
       var directory = f('%s/suite/tests/draft4', __dirname);
       // Read in all the test files
       var testFiles = fs.readdirSync(directory)
         .filter(function(x) {
           return x.indexOf('.json') != -1;
+        }).map(function(x) {
+          return f('%s/%s', directory, x);
         });
 
-      // // Filter out a single test file for now
-      // testFiles = testFiles.filter(function(x) { 
-      //     // return !(
-      //     //   x.indexOf('dependencies.json') != -1
-      //     // );
+      // Read in all the test files
+      directory = f('%s/suite/tests/draft4/optional', __dirname);
+      testFiles = testFiles.concat(fs.readdirSync(directory)
+        .filter(function(x) {
+          return x.indexOf('.json') != -1;
+        }).map(function(x) {
+          return f('%s/%s', directory, x);
+        }));
 
-      //   // return x.indexOf('ref.json') != -1
-      //   // return x.indexOf('refRemote.json') != -1
-      //   return x.indexOf('dependencies.json') != -1
-      //   // return x.indexOf('maxProperties.json') != -1
-      //   // return x.indexOf('maxLength.json') != -1
-      //   // return x.indexOf('refRemote.json') != -1
-      //   // return x.indexOf('dependencies.json') != -1
-      // });
+      // Filter out a single test file for now
+      testFiles = testFiles.filter(function(x) { 
+        return !(
+          x.indexOf('zeroTerminatedFloats.json') != -1
+        );
+
+        // return x.indexOf('ref.json') != -1
+        // return x.indexOf('refRemote.json') != -1
+        // return x.indexOf('format.json') != -1
+        // return x.indexOf('maxProperties.json') != -1
+        // return x.indexOf('maxLength.json') != -1
+        // return x.indexOf('refRemote.json') != -1
+        // return x.indexOf('dependencies.json') != -1
+      });
 
       // resolve all the files
       testFiles = testFiles.map(function(x) {
         return {
           file: f('%s/%s', directory, x), 
-          schemas: JSON.parse(fs.readFileSync(f('%s/%s', directory, x)))
+          schemas: JSON.parse(fs.readFileSync(x))
         };
       });
 
