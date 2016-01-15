@@ -1,6 +1,6 @@
 {
   "name": "vitesse-jsonspec",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JSONSpec validator library leveraging vitesse for high performance validation",
   "main": "index.js",
   "scripts": {
